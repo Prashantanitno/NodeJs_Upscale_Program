@@ -1,21 +1,24 @@
-const http = require("http");
+const express = require("express")
+const dotenv= require("dotenv")
+const bodyParser = require('body-parser');
+const productRoute = require('./routes/ProductRoute')
 
-const port = 5000;
+dotenv.config();
 
-const httpServer = http.createServer((req, res) => {
-  if ((req.url === "/")) {
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("hello!..  Home page  ");
-  }
-  if ((req.url === "/about")) {
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("hello!..  About page  ");
-  } else {
-    res.writeHead(404, { "Content-Type": "text/plain" });
-    res.end("Error  Page   ");
-  }
-});
+const app= express();
 
-httpServer.listen(port, () => {
-  console.log(`Server is running on ${port} `);
-});
+app.use(bodyParser.json())
+
+app.use('/api',productRoute)
+
+
+const port = process.env.PORT || 4000
+
+app.get('/',(req,res)=> {
+  req.send("HOme page this is ")
+
+})
+
+app.listen(port,()=>{
+  console.log(`server is running on Port : ${port}`);
+})
