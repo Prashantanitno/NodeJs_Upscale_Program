@@ -2,6 +2,9 @@ const express = require("express")
 const dotenv= require("dotenv")
 const bodyParser = require('body-parser');
 const productRoute = require('./routes/ProductRoute')
+const userRoute = require('./routes/UserRoute.js')
+const mongoose = require('mongoose');
+const db = require('./db/dbConnection')
 
 dotenv.config();
 
@@ -9,7 +12,14 @@ const app= express();
 
 app.use(bodyParser.json())
 
+// Db connection setup
+db.init();
+
+
+// Routes setup
 app.use('/api',productRoute)
+app.use('/api/user',userRoute)
+
 
 
 const port = process.env.PORT || 4000
