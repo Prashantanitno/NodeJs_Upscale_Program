@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: process.env.USER,
     pass: process.env.PASSWORD,
-  }, 
+  },
 });
 
 exports.register = async (req, res) => {
@@ -96,13 +96,52 @@ exports.deleteUser = async (req, res) => {
   return res.status(200).json({ message: "User deleted successfully", user });
 };
 
+exports.forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  console.log(email);
 
-exports.forgotPassword = async (req,res)=>{
+  try {
+    // Find the user by email
+    const user = await User.findOne({ email });
 
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-}
+    // Generate reset token and set its expiry time
+    const resetToken = jwt.sign({ id: user._id }, "your-secret-key", {
+      expiresIn: "1h",
+    });
+    user.resetToken = resetToken;
+    user.resetTokenExpiry = Date.now() + 3600000; // 1 hour
 
-exports.resetPassword = async(req,res)=>{
+    // Save the updated user document
+    await user.save();
 
-  
-}
+    // Send the password reset email
+    const mailOptions = {
+      from: process.env.USER,
+      to: user.email,
+      subject: "Password Reset",
+      html: `<p>Click the link to reset your password: <a href="http://localhost:5000/reset-password/${resetToken}">Reset Password</a></p>`,
+    };
+
+    transporter.sendMail(mailOptions, (err) => {
+      if (err) {
+        console.log("Error sending email:", err);
+        return res
+          .status(500)
+          .json({ message: "Failed to send reset password email" });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Reset password email sent successfully" });
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.resetPassword = async (req, res) => {};
