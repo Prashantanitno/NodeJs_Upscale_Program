@@ -10,7 +10,7 @@ const productSchema = new Schema({
   added_by: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-  },
+  }, 
 });
 
 const Product = mongoose.model("Product", productSchema);

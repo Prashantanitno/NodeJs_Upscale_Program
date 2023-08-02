@@ -21,25 +21,33 @@ exports.getProductById = (req, res) => {
 // Create a new product
 exports.createProduct = async (req, res) => {
   const { productName, productPrice } = req.body;
-  const { id } = req.params;
+  const { user } = req;
+
+  console.log("user id inside create ", user.id);
 
   try {
     // Find the user who is adding the product
-    const user = await User.findById(id);
+    const addedUser = await User.findById(user.id);
 
-    if (!user) {
+    if (!addedUser) {
       return res.status(404).json({ message: "User not found" });
     }
+
+    // console.log("addedUser",addedUser)
 
     // Create the product with the user reference
     const product = await Product.create({
       productName: productName,
       productPrice: productPrice,
-      added_by: id,
+      added_by: user.id,
     });
 
     res.status(201).json({ message: "Product added successfully", product });
+    // res.status(201).json({ message: "Product added successfully" });
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({ message: "Product already exists" });
+    }
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
   }
