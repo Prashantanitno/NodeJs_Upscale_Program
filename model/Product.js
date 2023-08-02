@@ -6,11 +6,11 @@ const productSchema = new Schema({
   productPrice: {
     type: Number,
     required: true,
-  },
-  added_by: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
   }, 
+  added_by: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+  },
 });
 
 const Product = mongoose.model("Product", productSchema);

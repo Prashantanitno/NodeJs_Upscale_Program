@@ -45,10 +45,10 @@ exports.createProduct = async (req, res) => {
     res.status(201).json({ message: "Product added successfully", product });
     // res.status(201).json({ message: "Product added successfully" });
   } catch (error) {
+    console.log(error);
     if (error.code === 11000) {
       return res.status(400).json({ message: "Product already exists" });
     }
-    console.log(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
