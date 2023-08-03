@@ -1,4 +1,5 @@
 // const products = require("../model/Product");
+const axios = require("axios");
 const Product = require("../model/Product");
 const User = require("../model/UserSchema");
 
@@ -81,5 +82,18 @@ exports.deleteProduct = (req, res) => {
     res.json({ message: "Product deleted successfully" });
   } else {
     res.status(404).json({ message: "Product not found" });
+  }
+};
+
+exports.dummyData = async (req, res) => {
+  try {
+    const response = await axios.get(
+      "https://jsonplaceholder.typicode.com/posts"
+    );
+    const products = response.data.slice(0, 5); // Get the first 5 posts as dummy products
+    res.json(products);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
