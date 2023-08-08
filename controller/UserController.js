@@ -145,7 +145,7 @@ exports.forgotPassword = async (req, res) => {
 exports.resetPassword = async (req, res) => {};
 
 exports.fileUpload = async (req, res) => {
-  console.log(req.file)
+  // console.log(req.file)
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded" });
   }

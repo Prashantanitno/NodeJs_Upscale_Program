@@ -13,11 +13,12 @@ const {
 const {
   validateUserData,
   verifyToken,
+  upload,
   
 } = require("../middleware/UserMiddleware");
 const multer =require('multer')
 const router1 = express.Router();
-const upload =multer({dest:"./uploads"})
+// const upload =multer({dest:"./uploads"})
 router1.post("/register", validateUserData, register);
 router1.post("/login", login);
 router1.get("/users", verifyToken, getAllUsers);
