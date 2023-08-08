@@ -5,8 +5,11 @@ const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 
 const transporter = nodemailer.createTransport({
-  service: "gmail", // e.g., 'gmail'
+  host: "smtp.gmail.com", // e.g., 'gmail'
+  port: 465,
+  secure: false,
   auth: {
+    // type: 'OAuth2',
     user: process.env.USER,
     pass: process.env.PASSWORD,
   },
@@ -97,13 +100,14 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.forgotPassword = async (req, res) => {
+  process.env.USER;
   const { email } = req.body;
-  console.log(email);
+  console.log(process.env.USER, email);
 
   try {
     // Find the user by email
     const user = await User.findOne({ email });
-
+    console.log("user", user);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -120,24 +124,18 @@ exports.forgotPassword = async (req, res) => {
 
     // Send the password reset email
     const mailOptions = {
-      from: process.env.USER,
-      to: user.email,
+      from: "Aditya555antino@gmail.com",
+      to: "anuj.aes@gmail.com",
       subject: "Password Reset",
       html: `<p>Click the link to reset your password: <a href="http://localhost:5000/reset-password/${resetToken}">Reset Password</a></p>`,
     };
 
-    transporter.sendMail(mailOptions, (err) => {
-      if (err) {
-        console.log("Error sending email:", err);
-        return res
-          .status(500)
-          .json({ message: "Failed to send reset password email" });
-      }
+    const temp = await transporter.sendMail(mailOptions);
+    console.log(temp);
 
-      return res
-        .status(200)
-        .json({ message: "Reset password email sent successfully" });
-    });
+    // return res
+    //   .status(200)
+    //   .json({ message: "Reset password email sent successfully" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
@@ -145,3 +143,11 @@ exports.forgotPassword = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {};
+
+exports.fileUpload = async (req, res) => {
+  console.log(req.file)
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+  res.status(200).json({ message: "File uploaded successfully" });
+};

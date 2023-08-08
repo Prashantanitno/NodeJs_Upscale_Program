@@ -21,8 +21,8 @@ app.use("/api", userRoute);
 
 const port = process.env.PORT || 4000;
 
-app.get("/", (req, res) => {
-  req.send("HOme page this is ");
+app.get("/check-server", (req, res) => {
+  res.status(200).send("HOme page this is ");
 });
 
 app.listen(port, () => {

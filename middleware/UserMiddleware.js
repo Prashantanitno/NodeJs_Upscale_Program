@@ -1,7 +1,7 @@
 const Joi = require("joi");
-const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
-
+const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const multer = require("multer");
 
 const userSchema = Joi.object({
   name: Joi.string().required(),
@@ -37,5 +37,16 @@ const verifyToken = (req, res, next) => {
 
 
 
+// Set up Multer storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Specify the upload directory
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname); // Rename the file
+  },
+});
 
-module.exports = { validateUserData, verifyToken };
+const upload = multer({ storage: storage });
+
+module.exports = { validateUserData, verifyToken, upload };
