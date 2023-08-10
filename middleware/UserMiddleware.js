@@ -49,7 +49,7 @@ const verifyToken = (req, res, next) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-cb(null, './uploads')
+    cb(null, "./uploads");
   },
   filename: (req, file, cb) => {
     // console.log("file before", req.file.originalname);
@@ -59,6 +59,6 @@ cb(null, './uploads')
   },
 });
 
-const upload = multer({storage})
+const upload = multer({ storage });
 
 module.exports = { validateUserData, verifyToken, upload };
